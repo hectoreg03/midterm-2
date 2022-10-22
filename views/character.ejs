@@ -1,8 +1,11 @@
 <%- include("partials/header", {charname: char.firstName}); %>
 <img id="demo2" src= "https://thronesapi.com/assets/images/<%= char.image %>"" >
 <br/>
-<textarea rows="4" cols="50" id="demo"></textarea>
-<br/>
-<a href="#" class="previous">&laquo; Previous</a>
-<a href="#" class="next">Next &raquo;</a>
+<form action="/character" method="post">
+    <input type="text" name="search" />
+    <button type ="submit" name="searcher">Search</button>
+    <input type="submit" name="previous" value="previous" />
+    <input type="submit" name="next" value="next" />
+
+</form>
 <%- include("partials/footer"); %>
