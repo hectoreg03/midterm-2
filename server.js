@@ -1,4 +1,5 @@
 const express= require('express');
+const { request } = require('http');
 const https = require('https');
 const { stringify } = require('querystring');
 const app= express();
@@ -10,28 +11,34 @@ app.engine('ejs',require('ejs').renderFile);
 app.set("view engine", "ejs");
 
 app.get('/',(req,res)=>{
-    var tmpIndex = 0;/*
+    var tmpIndex = 0;
+    /*
     res.render("character",{char:{
-        name: "hector",
+        firstname: "hector",
         image: "daenerys.jpg"
     }
     });  */
-    options =
-    https.request("https://thronesapi.com/api/v2/Characters/0", (response)=>{ 
+    //options =
+    
+    const url="https://thronesapi.com/api/v2/Characters";
+    const request = https.request(url+"/"+String(tmpIndex), (response)=>{ 
         console.log(response.status);
+        let data='';
         response.on('data', (chunk) => {
             data = data + chunk.toString();
         });
-        response.on("end",( )=> { 
+        response.on('end',( )=> { 
             var jsonData = JSON.parse(data);
             console.log(jsonData);
-            res.render("character",{char:jsonData}); 
-        })
+            //res.render("character",{char:jsonData}); 
+            res.render("character", {char:jsonData});
+        });
         response.on("error", (e)=>{
             console.loeg("Error ${e.message}");
             res.send("Error ${e.message}");
-        })
+        });
     })
+    request.end();
 })
 /*
 app.get('/character',(req,res)=>{
