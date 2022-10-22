@@ -123,9 +123,11 @@ app.get('/character',(req,res)=>{
     });
     request.end();    
     } else{
+        console.log(apiResponse[tmpIndex].fullName)
         for( var i=0; i<apiResponse2.length; i++){
             if(apiResponse2[i].name == apiResponse[tmpIndex].fullName){
                 tmpIndex2=i;
+                console.log(apiResponse2[i].name);
             }
         }
         res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2[tmpIndex2]});
