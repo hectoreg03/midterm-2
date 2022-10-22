@@ -24,7 +24,7 @@ app.get('/',(req,res)=>{
     //options =
     
     const url="https://thronesapi.com/api/v2/Characters";
-    const url2 ="https://anapioficeandfire.com/api/characters";
+    const url2 ="https://anapioficeandfire.com/api/characters/";
     if (apiResponse.length == 0){
     const request = https.request(url, (response)=>{ 
         console.log(response.status);
@@ -45,16 +45,23 @@ app.get('/',(req,res)=>{
         });
     });
     request.end();  
-    const request2 = https.request(url2, (response)=>{ 
+    
+    apiResponse2.length=apiResponse.length;
+    for( var i=0; i<2139; i++){
+    const request2 = https.request(url2+i, (response)=>{ 
         console.log(response.status);
-        let data='';
+        let data2='';
         response.on('data', (chunk) => {
-            data = data + chunk.toString();
+            data2 = data2 + chunk.toString();
         });
         response.on('end',( )=> { 
-            var jsonData = JSON.parse(data);
+            var jsonData2 = JSON.parse(data2);
             //console.log(jsonData);
-            apiResponse2=jsonData;
+            for( var j=0; j<apiResponse.length; j++){
+                if(jsonData2.name == apiResponse[j].fullName){
+                    apiResponse2[j]=i;
+                }
+            }
             //res.render("character",{char:jsonData}); 
         });
         response.on("error", (e)=>{
@@ -62,11 +69,13 @@ app.get('/',(req,res)=>{
             res.send("Error ${e.message}");
         });
     });
-    request2.end();  
-    } else{
-        res.render("home", {characters:apiResponse});
+    
+    request2.end();
     }
     console.log(apiResponse2);
+    } else{
+        res.render("home", {characters:apiResponse });
+    }
 })
 app.get('/character',(req,res)=>{
     /*
@@ -80,24 +89,6 @@ app.get('/character',(req,res)=>{
     const url="https://thronesapi.com/api/v2/Characters";
     const url2 ="https://anapioficeandfire.com/api/characters";
     if (apiResponse.length == 0){
-        const request2 = https.request(url2, (response)=>{ 
-            console.log(response.status);
-            let data='';
-            response.on('data', (chunk) => {
-                data = data + chunk.toString();
-            });
-            response.on('end',( )=> { 
-                var jsonData = JSON.parse(data);
-                //console.log(jsonData);
-                apiResponse2=jsonData;
-                //res.render("character",{char:jsonData}); 
-            });
-            response.on("error", (e)=>{
-                console.log("Error ${e.message}");
-                res.send("Error ${e.message}");
-            });
-        });
-        request2.end();
     const request = https.request(url, (response)=>{ 
         console.log(response.status);
         let data='';
@@ -114,7 +105,9 @@ app.get('/character',(req,res)=>{
                     tmpIndex2=i;
                 }
             }
-            res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2[tmpIndex2]});
+            
+        res.render("character", {char:apiResponse[tmpIndex]});
+            
         });
         response.on("error", (e)=>{
             console.log("Error ${e.message}");
@@ -130,7 +123,7 @@ app.get('/character',(req,res)=>{
                 console.log(apiResponse2[i].name);
             }
         }
-        res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2[tmpIndex2]});
+        res.render("character", {char:apiResponse[tmpIndex]});
     }
 })
     
@@ -166,7 +159,7 @@ app.post('/character',(req,res)=>{
                 tmpIndex2=i;
             }
         }
-        res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2[tmpIndex2]});
+        res.render("character", {char:apiResponse[tmpIndex]});
     console.log(req);
 })
 app.listen(3000,()=>{
