@@ -1,3 +1,10 @@
+.bodyProperties {
+  background-color: lightblue;
+}
+.main {
+  text-align: center;
+  margin-top: 10vh;
+}
 a {
     text-decoration: none;
     display: inline-block;
@@ -12,9 +19,23 @@ a {
   .previous {
     background-color: #f1f1f1;
     color: black;
+    margin: 1vh;
   }
   
   .next {
     background-color: #04AA6D;
     color: white;
+    margin: 1vh;
+  }
+  .image {
+    margin-bottom: 2vh;
+    max-height: 30vh;
+    min-height: 30vh;
+  }
+  .formulario {
+    display: contents;
+  }
+  .label{
+    font-size: x-large;
+    font-family: cursive;
   }
