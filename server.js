@@ -10,8 +10,9 @@ app.use(express.static("public"));
 app.engine('ejs',require('ejs').renderFile);
 app.set("view engine", "ejs");
 
+var apiResponse = [];
+var tmpIndex = 0;
 app.get('/',(req,res)=>{
-    var tmpIndex = 0;
     /*
     res.render("character",{char:{
         firstname: "hector",
@@ -21,7 +22,8 @@ app.get('/',(req,res)=>{
     //options =
     
     const url="https://thronesapi.com/api/v2/Characters";
-    const request = https.request(url+"/"+String(tmpIndex), (response)=>{ 
+    if (apiResponse.length == 0){
+    const request = https.request(url, (response)=>{ 
         console.log(response.status);
         let data='';
         response.on('data', (chunk) => {
@@ -29,23 +31,60 @@ app.get('/',(req,res)=>{
         });
         response.on('end',( )=> { 
             var jsonData = JSON.parse(data);
-            console.log(jsonData);
+            //console.log(jsonData);
+            apiResponse=jsonData;
             //res.render("character",{char:jsonData}); 
-            res.render("character", {char:jsonData});
+            res.render("character", {char:apiResponse[tmpIndex]});
         });
         response.on("error", (e)=>{
-            console.loeg("Error ${e.message}");
+            console.log("Error ${e.message}");
             res.send("Error ${e.message}");
         });
-    })
-    request.end();
+    });
+    request.end();  
+    } else{
+        res.render("character", {char:apiResponse[tmpIndex]});
+    }
+})
+app.get('/character',(req,res)=>{
+    /*
+    res.render("character",{char:{
+        firstname: "hector",
+        image: "daenerys.jpg"
+    }
+    });  */
+    //options =
+    
+    const url="https://thronesapi.com/api/v2/Characters";
+    if (apiResponse.length == 0){
+    const request = https.request(url, (response)=>{ 
+        console.log(response.status);
+        let data='';
+        response.on('data', (chunk) => {
+            data = data + chunk.toString();
+        });
+        response.on('end',( )=> { 
+            var jsonData = JSON.parse(data);
+            //console.log(jsonData);
+            apiResponse=jsonData;
+            //res.render("character",{char:jsonData}); 
+            res.render("character", {char:apiResponse[tmpIndex]});
+        });
+        response.on("error", (e)=>{
+            console.log("Error ${e.message}");
+            res.send("Error ${e.message}");
+        });
+    });
+    request.end();  
+    } else{
+        res.render("character", {char:apiResponse[tmpIndex]});
+    }
 })
 /*
 app.get('/character',(req,res)=>{
     
     var tmpIndex = 0;
     
-    var apiResponse = [];
     https.request('https://thronesapi.com/api/v2/Characters',(response)=>{ 
         console.log(response.status);
         response.on("data",(data)=>{
@@ -58,25 +97,52 @@ app.get('/character',(req,res)=>{
             res.send("Error ${e.message}");
         })
     })
-})
-app.post('/character',(req,res)=>{
-    function initialize(data) {
-    document.getElementById("demo").value = data[0].firstName + " " + data[0].lastName;
-        document.getElementById("demo2").src = data[0].imageUrl;
-    }
-    function previous() {
+})*/
+/*
+function previous() {
     tmpIndex = tmpIndex > 0 ? (tmpIndex -1) : (apiResponse.length - 1);
     console.log(tmpIndex);
     document.getElementById("demo").value = apiResponse[tmpIndex].firstName + " " + apiResponse[tmpIndex].lastName;
     document.getElementById("demo2").src = apiResponse[tmpIndex].imageUrl;
     }
-    function next() {
+function next() {
     tmpIndex = tmpIndex >= (apiResponse.length - 1) ? 0 : (tmpIndex + 1);
     console.log(tmpIndex);
     document.getElementById("demo").value = apiResponse[tmpIndex].firstName + " " + apiResponse[tmpIndex].lastName;
     document.getElementById("demo2").src = apiResponse[tmpIndex].imageUrl;
-    }
-})*/
+    }*/
+    
+app.post('/character',(req,res)=>{
+    if(req.body.next != undefined){
+        tmpIndex= tmpIndex+1;
+        if(tmpIndex >= apiResponse.length)
+            tmpIndex=0;
+        console.log(tmpIndex);
+        } else{
+            
+            if(req.body.previous != undefined){
+                if(tmpIndex == 0)
+                    tmpIndex=apiResponse.length -1;
+                else
+                    tmpIndex= tmpIndex -1;
+                    console.log(tmpIndex);
+             }
+             else{
+                
+                if(req.body.searcher != undefined){
+                    //console.log(apiResponse[0].firstName);
+                    for( var i=0; i<apiResponse.length;i++){
+                        if( apiResponse[i].firstName == req.body.search){
+                            tmpIndex=i;
+                        }
+                    }
+                }
+             }
+        }
+        
+        res.render("character", {char:apiResponse[tmpIndex]});
+    console.log(req);
+})
 app.listen(3000,()=>{
     console.log("listening to port 3000");
 })
