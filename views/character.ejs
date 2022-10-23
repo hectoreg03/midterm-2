@@ -1,5 +1,5 @@
 <%- include("partials/header", {charname: char.firstName}); %>
-<div class=" justify-content-center">
+<div class=" biography">
         <img id="demo2" src= "https://thronesapi.com/assets/images/<%= char.image %>"" width="300"  height="300">
     <div >
       <div > 
@@ -8,41 +8,51 @@
         </h3>
     </div>
     <div >
-        <div > 
-          <h5>    
-          Title:
+        <div class="biography"> 
+          <h5 class="tittle">    
+          Titles:
           </h5>
           <ul>
+          <% if (complement.titles != ''){%>
           <%  for(var k in complement.titles) { %>
               <li><%= complement.titles[k]%></li>
           <% } %>
+          <% } else{ %>
+            None
+            <% } %>
+
         </ul>
           <br>
-          <h5>    
+          <h5 class="tittle">    
             Aliases:
             </h5>
             
           <ul>
+            
+          <% if (complement.aliases != ''){%>
             <%  for(var k in complement.aliases) { %>
                 <li><%= complement.aliases[k]%></li>
             <% } %>
+            <% } else{ %>
+              None
+              <% } %>
           </ul>
             <br>
-            <h5>    
+            <h5 class="tittle">    
               Family:
               </h5>
               <%= char.family%>
               <br>
-              <h5>    
+              <h5 class="tittle">    
                 Born:
                 </h5>
                 <%= complement.born%>
                 <br>
-                <h5>    
+                <h5 class="tittle">    
                   Death:
                   </h5>
                   <%  if(complement.died == '') { %>
-                    -
+                    Not Yet
                   <% } else{%>
                     <%= complement.died%>
                     <% } %>

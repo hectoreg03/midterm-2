@@ -81,3 +81,16 @@ h1{
 .imgcont:hover .middle {
   opacity: 1;
 }
+
+#demo2{
+  align-self: center;
+}
+.biography{
+  background-color: rgb(15, 14, 14);
+  color: #FFF190;
+  text-align: center;
+}
+.tittle{
+  font-size: larger;
+  color: rgb(0, 174, 255);
+}

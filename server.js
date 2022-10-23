@@ -19,9 +19,6 @@ function isArray(what) {
     return Object.prototype.toString.call(what) === '[object Array]';
 }
 
-function movetochar(){
-    
-}
 app.get('/',(req,res)=>{
     
     const url="https://thronesapi.com/api/v2/Characters";
