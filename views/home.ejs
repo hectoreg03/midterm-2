@@ -1,90 +1,18 @@
-<%- include("partials/header", {charname: "Game of Thrones API"}); %>
+
+    <%- include("partials/header", {charname: "Game of Thrones API"}); %>
        
-
-    <div>
-    <h1> RENAISSANCE</h1>
+    <div class="row">
+<%  for(var k in characters) { %>
+    <div class="col imgcont">
+        <img class="imggal" src="<%= characters[k].imageUrl %>">
+      <div class="middle">
+        <div class="texto-galeria"><%= characters[k].fullName%></div>
+      </div>
     </div>
-    <div class="container" id ="galeriam1">
+    <% if (k % 4 == 3 ){ %>
+    </div>
       <div class="row">
-        <div class="col-sm imgcont">
-          <a href="/html/birthvenus.html">
-            <img  class="d-block imggal" src="images\4.jpg"  ></a>
-          <div class="middle">
-            <div class="texto-galeria"> The Birth of Venus </div>
-          </div>
-        </div>
-        <div class="col-sm imgcont">
-          <a href="/html/venusurbino.html">
-            <img class="d-block imggal" src="images\5.jpg"  ></a>
-          <div class="middle">
-            <div class="texto-galeria">Venus of Urbino</div>
-          </div>
-        </div>
-        <div class="col-sm imgcont">
-          <a href="/html/adan.html">
-            <img class="d-block imggal" src="images\6.jpg"></a>
-          <div class="middle">
-            <div class="texto-galeria">Adan Creation</div>
-          </div>
-        </div>
-        <div class="w-100"></div>
-        <div class="col-sm imgcont">
-          <a href="/html/dome.html">
-            <img class="d-block imggal" src="images\1.jpg"></a>
-          <div class="middle">
-            <div class="texto-galeria">The Dome of the Duomo in Florence</div>
-          </div>
-        </div>
-        <div class="col-sm imgcont">
-          <a href="/html/paradise.html">
-            <img class="d-block imggal" src="images\2.jpg"></a>
-          <div class="middle">
-            <div class="texto-galeria">The Paradise</div>
-          </div>
-        </div>
-        <div class="col-sm imgcont">
-          <a href="/html/judgment.html">
-            <img class="d-block imggal" src="images\3.jpg"></a>
-          <div class="middle">
-            <div class="texto-galeria">Last Judgment Fresco Cycle</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="piedepagina">
-      <div class="container" id=" pdpg">
-        <div class="row row1">
-          <div class="col-sm ttlpie">
-            Le Musée D'art
-          </div>
-          <div class="col-sm ttlpie">
-            About
-          </div>
-          <div class="col-sm">
-            Trade
-          </div>
-          <div class="col-sm">
-            Ayuda
-          </div>
-        </div>
-        <hr style="border: 1px solid white;">
-        <div class="row row2">
-          <div class="col-sm">
-            <a class="linkspie" href="/index.html">Home</a>
-          </div>
-          <div class="col-sm">
-            <a class="linkspie" href="/html/aboutus.html">About us</a>
-          </div>
-          <div class="col-sm">
-            <a class="linkspie" href="/html/catalogo.html">Collection</a>
-          </div>
-          <div class="col-sm">
-            <a class="linkspie" href="/html/signup.html">Crea una Cuenta</a>
-            <br>
-            <a class="linkspie" href="/html/login.html">Inicia Sesion</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <%- include("partials/footer"); %>
+      <% } %>
+<% } %>
+</div>
+    <%- include("partials/footer"); %>\

@@ -11,23 +11,25 @@ app.engine('ejs',require('ejs').renderFile);
 app.set("view engine", "ejs");
 
 var apiResponse = [];
-var apiResponse2 = [];
 var tmpIndex = 0;
-var tmpIndex2 = 0;
+
+const url2 ="https://www.anapioficeandfire.com/api/characters?name=";
+
+function isArray(what) {
+    return Object.prototype.toString.call(what) === '[object Array]';
+}
+
+function movetochar(){
+    
+}
 app.get('/',(req,res)=>{
-    /*
-    res.render("character",{char:{
-        firstname: "hector",
-        image: "daenerys.jpg"
-    }
-    });  */
-    //options =
     
     const url="https://thronesapi.com/api/v2/Characters";
-    const url2 ="https://anapioficeandfire.com/api/characters/";
+
     if (apiResponse.length == 0){
+
     const request = https.request(url, (response)=>{ 
-        console.log(response.status);
+
         let data='';
         response.on('data', (chunk) => {
             data = data + chunk.toString();
@@ -36,7 +38,7 @@ app.get('/',(req,res)=>{
             var jsonData = JSON.parse(data);
             //console.log(jsonData);
             apiResponse=jsonData;
-            //res.render("character",{char:jsonData}); 
+            //res.render("character",{char:jsonData});
             res.render("home", {characters:apiResponse });
         });
         response.on("error", (e)=>{
@@ -44,40 +46,16 @@ app.get('/',(req,res)=>{
             res.send("Error ${e.message}");
         });
     });
+    
     request.end();  
     
-    apiResponse2.length=apiResponse.length;
-    for( var i=0; i<2139; i++){
-    const request2 = https.request(url2+i, (response)=>{ 
-        console.log(response.status);
-        let data2='';
-        response.on('data', (chunk) => {
-            data2 = data2 + chunk.toString();
-        });
-        response.on('end',( )=> { 
-            var jsonData2 = JSON.parse(data2);
-            //console.log(jsonData);
-            for( var j=0; j<apiResponse.length; j++){
-                if(jsonData2.name == apiResponse[j].fullName){
-                    apiResponse2[j]=i;
-                }
-            }
-            //res.render("character",{char:jsonData}); 
-        });
-        response.on("error", (e)=>{
-            console.log("Error ${e.message}");
-            res.send("Error ${e.message}");
-        });
-    });
-    
-    request2.end();
-    }
-    console.log(apiResponse2);
     } else{
+
         res.render("home", {characters:apiResponse });
     }
 })
 app.get('/character',(req,res)=>{
+    //console.log(apiResponse.length);
     /*
     res.render("character",{char:{
         firstname: "hector",
@@ -87,7 +65,6 @@ app.get('/character',(req,res)=>{
     //options =
     
     const url="https://thronesapi.com/api/v2/Characters";
-    const url2 ="https://anapioficeandfire.com/api/characters";
     if (apiResponse.length == 0){
     const request = https.request(url, (response)=>{ 
         console.log(response.status);
@@ -100,13 +77,31 @@ app.get('/character',(req,res)=>{
             //console.log(jsonData);
             apiResponse=jsonData;
             //res.render("character",{char:jsonData}); 
-            for( var i=0; i<apiResponse2.length; i++){
-                if(apiResponse2[i].name == apiResponse[tmpIndex].fullName){
-                    tmpIndex2=i;
-                }
-            }
-            
-        res.render("character", {char:apiResponse[tmpIndex]});
+        
+        var apiResponse2;
+        const request2 = https.request(url2+apiResponse[tmpIndex].fullName, (response)=>{ 
+            let data='';
+            response.on('data', (chunk) => {
+                data = data + chunk.toString();
+            });
+            response.on('end',( )=> { 
+                var jsonData2 = JSON.parse(data);
+                console.log(jsonData2);
+                if(isArray(jsonData2)) {
+                        apiResponse2=jsonData2[jsonData2.length-1];
+                    } else {
+                        apiResponse2=jsonData2;
+                    }
+                res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2});
+                //res.render("character",{char:jsonData}); 
+            });
+            response.on("error", (e)=>{
+                apiResponse2.push(apiResponse2[0]);
+                console.log("Error ${e.message}");
+                res.send("Error ${e.message}");
+            });
+        });
+        request2.end();
             
         });
         response.on("error", (e)=>{
@@ -116,14 +111,32 @@ app.get('/character',(req,res)=>{
     });
     request.end();    
     } else{
-        console.log(apiResponse[tmpIndex].fullName)
-        for( var i=0; i<apiResponse2.length; i++){
-            if(apiResponse2[i].name == apiResponse[tmpIndex].fullName){
-                tmpIndex2=i;
-                console.log(apiResponse2[i].name);
-            }
-        }
-        res.render("character", {char:apiResponse[tmpIndex]});
+        var apiResponse2;
+        const request2 = https.request(url2+apiResponse[tmpIndex].fullName, (response)=>{ 
+            console.log(response.status);
+            let data2='';
+            response.on('data', (chunk) => {
+                data2 = data2 + chunk.toString();
+            });
+            response.on('end',( )=> { 
+                var jsonData2 = JSON.parse(data2);
+                //console.log(jsonData);
+                if(isArray(jsonData2)) {
+                    apiResponse2=jsonData2[jsonData2.length-1];
+                } else {
+                    apiResponse2=jsonData2;
+                }
+                console.log(apiResponse2);
+                res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2});
+                //res.render("character",{char:jsonData}); 
+            });
+            response.on("error", (e)=>{
+                apiResponse2.push(apiResponse2[0]);
+                console.log("Error ${e.message}");
+                res.send("Error ${e.message}");
+            });
+        });
+        request2.end();
     }
 })
     
@@ -154,13 +167,35 @@ app.post('/character',(req,res)=>{
                 }
              }
         }
-        for( var i=0; i<apiResponse2.length; i++){
-            if(apiResponse2[i].name == apiResponse[tmpIndex].fullName || apiResponse2[i].name == apiResponse[tmpIndex].firstName){
-                tmpIndex2=i;
-            }
-        }
-        res.render("character", {char:apiResponse[tmpIndex]});
-    console.log(req);
+        var apiResponse2;
+        const request2 = https.request(url2+apiResponse[tmpIndex].fullName, (response)=>{ 
+            console.log(response.status);
+            let data2='';
+            response.on('data', (chunk) => {
+                data2 = data2 + chunk.toString();
+            });
+            response.on('end',( )=> { 
+                var jsonData2 = JSON.parse(data2);
+                //console.log(jsonData);
+                
+                if(isArray(jsonData2)) {
+                    apiResponse2=jsonData2[jsonData2.length-1];
+                } else {
+                    apiResponse2=jsonData2;
+                }
+                
+            console.log(apiResponse2);
+                res.render("character", {char:apiResponse[tmpIndex], complement: apiResponse2});
+                //res.render("character",{char:jsonData}); 
+            });
+            response.on("error", (e)=>{
+                apiResponse2.push(apiResponse2[0]);
+                console.log("Error ${e.message}");
+                res.send("Error ${e.message}");
+            });
+        });
+        request2.end();
+    
 })
 app.listen(3000,()=>{
     console.log("listening to port 3000");
